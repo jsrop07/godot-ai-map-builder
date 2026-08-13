@@ -33,3 +33,9 @@ data/uploads/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Downloaded raw asset packs
+godot/assets/real/
+
+# Godot cache
+godot/.godot/

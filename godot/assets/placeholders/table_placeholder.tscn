@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://6i5kehjm0jxr"]
+
+[ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_kqdhr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
+size = Vector2(96, 64)
+
+[node name="TablePlaceholder" type="Node2D" unique_id=1650474153]
+script = ExtResource("1_kqdhr")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=986359807]
+polygon = PackedVector2Array(-48, -32, 48, -32, 48, 32, -48, 32)
+
+[node name="ClickArea" type="Area2D" parent="." unique_id=499754334]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=971182242]
+shape = SubResource("RectangleShape2D_xrivr")

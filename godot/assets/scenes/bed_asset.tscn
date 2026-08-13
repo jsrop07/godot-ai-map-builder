@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://ck8n06toge7y4"]
+
+[ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_312w4"]
+[ext_resource type="Texture2D" uid="uid://csl3rkeehlag" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/bedDouble_SE.png" id="2_clja3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
+size = Vector2(64, 96)
+
+[node name="BedAsset" type="Node2D" unique_id=1229401954]
+script = ExtResource("1_312w4")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
+texture = ExtResource("2_clja3")
+
+[node name="ClickArea" type="Area2D" parent="." unique_id=399518407]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=949062449]
+shape = SubResource("RectangleShape2D_xrivr")

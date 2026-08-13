@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bv8wcplfqqxy1"]
+
+[ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_qltuo"]
+[ext_resource type="Texture2D" uid="uid://boxjh8ie7xwy3" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/chairCushion_SE.png" id="2_qltuo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
+size = Vector2(32, 32)
+
+[node name="ChairAsset" type="Node2D" unique_id=1229401954]
+script = ExtResource("1_qltuo")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
+texture = ExtResource("2_qltuo")
+
+[node name="ClickArea" type="Area2D" parent="." unique_id=399518407]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=949062449]
+position = Vector2(62, -12)
+shape = SubResource("RectangleShape2D_xrivr")

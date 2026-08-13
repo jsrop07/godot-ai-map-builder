@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dk3xji1tl4dmw"]
+
+[ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_0pvia"]
+[ext_resource type="Texture2D" uid="uid://dbq5g05gq0j1d" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/kitchenFridge_SE.png" id="2_tx60g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
+size = Vector2(32, 64)
+
+[node name="RefrigeratorAsset" type="Node2D" unique_id=1229401954]
+script = ExtResource("1_0pvia")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
+texture = ExtResource("2_tx60g")
+
+[node name="ClickArea" type="Area2D" parent="." unique_id=399518407]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=949062449]
+shape = SubResource("RectangleShape2D_xrivr")

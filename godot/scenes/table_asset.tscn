@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cjl8uvvps1lrj"]
+
+[ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_odbt7"]
+[ext_resource type="Texture2D" uid="uid://c7ojdwckv1ahj" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/table_SE.png" id="2_q6dpf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
+size = Vector2(96, 64)
+
+[node name="TableAsset" type="Node2D" unique_id=1229401954]
+script = ExtResource("1_odbt7")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
+texture = ExtResource("2_q6dpf")
+
+[node name="ClickArea" type="Area2D" parent="." unique_id=399518407]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=949062449]
+shape = SubResource("RectangleShape2D_xrivr")

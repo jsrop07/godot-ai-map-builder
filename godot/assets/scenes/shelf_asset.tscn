@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b7dsrll8oi68a"]
+
+[ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_7lxmy"]
+[ext_resource type="Texture2D" uid="uid://dbfy26dtqirdf" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/bookcaseOpen_SE.png" id="2_7lxmy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
+size = Vector2(96, 32)
+
+[node name="ShelfAsset" type="Node2D" unique_id=1229401954]
+script = ExtResource("1_7lxmy")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
+texture = ExtResource("2_7lxmy")
+
+[node name="ClickArea" type="Area2D" parent="." unique_id=399518407]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=949062449]
+shape = SubResource("RectangleShape2D_xrivr")
