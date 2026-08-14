@@ -2,12 +2,19 @@
 
 [ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_bsimt"]
 [ext_resource type="Texture2D" uid="uid://c7ojdwckv1ahj" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/table_SE.png" id="2_wxnvi"]
+[ext_resource type="Texture2D" uid="uid://cq75bknipfd6h" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/table_SW.png" id="3_accfl"]
+[ext_resource type="Texture2D" uid="uid://2fgjbo3rw7ek" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/table_NW.png" id="4_8gb2b"]
+[ext_resource type="Texture2D" uid="uid://ptvhy770pruy" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/table_NE.png" id="5_sas2l"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
 size = Vector2(96, 64)
 
 [node name="TableAsset" type="Node2D" unique_id=1229401954]
 script = ExtResource("1_bsimt")
+texture_se = ExtResource("2_wxnvi")
+texture_sw = ExtResource("3_accfl")
+texture_nw = ExtResource("4_8gb2b")
+texture_ne = ExtResource("5_sas2l")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
 position = Vector2(32, -16)

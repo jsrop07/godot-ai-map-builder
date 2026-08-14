@@ -1,0 +1,74 @@
+{
+    "assets": [
+        {
+            "asset_id": "table_001",
+            "type": "table",
+            "scene_path": "res://assets/scenes/table_asset.tscn",
+            "size": {
+                "width": 96,
+                "height": 64
+            },
+            "default_direction": "SE"
+        },
+        {
+            "asset_id": "chair_001",
+            "type": "chair",
+            "scene_path": "res://assets/scenes/chair_asset.tscn",
+            "size": {
+                "width": 32,
+                "height": 32
+            },
+            "default_direction": "SE"
+        },
+        {
+            "asset_id": "cabinet_001",
+            "type": "cabinet",
+            "scene_path": "res://assets/scenes/cabinet_asset.tscn",
+            "size": {
+                "width": 64,
+                "height": 32
+            },
+            "default_direction": "SE"
+        },
+        {
+            "asset_id": "bed_001",
+            "type": "bed",
+            "scene_path": "res://assets/scenes/bed_asset.tscn",
+            "size": {
+                "width": 64,
+                "height": 96
+            },
+            "default_direction": "SE"
+        },
+        {
+            "asset_id": "sofa_001",
+            "type": "sofa",
+            "scene_path": "res://assets/scenes/sofa_asset.tscn",
+            "size": {
+                "width": 96,
+                "height": 64
+            },
+            "default_direction": "SE"
+        },
+        {
+            "asset_id": "shelf_001",
+            "type": "shelf",
+            "scene_path": "res://assets/scenes/shelf_asset.tscn",
+            "size": {
+                "width": 96,
+                "height": 32
+            },
+            "default_direction": "SE"
+        },
+        {
+            "asset_id": "refrigerator_001",
+            "type": "refrigerator",
+            "scene_path": "res://assets/scenes/refrigerator_asset.tscn",
+            "size": {
+                "width": 32,
+                "height": 64
+            },
+            "default_direction": "SE"
+        }
+    ]
+}

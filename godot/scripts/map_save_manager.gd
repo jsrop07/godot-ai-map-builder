@@ -1,36 +1,10 @@
 extends Node
 
 @onready var objects: Node2D = $"../Objects"
+@onready var asset_registry: Node = $"../AssetRegistry"
 
 const SAVE_PATH := "user://map_save.json"
 
-const TABLE_SCENE := preload(
-	"res://assets/scenes/table_asset.tscn"
-)
-
-const CHAIR_SCENE := preload(
-	"res://assets/scenes/chair_asset.tscn"
-)
-
-const CABINET_SCENE := preload(
-	"res://assets/scenes/cabinet_asset.tscn"
-)
-
-const BED_SCENE := preload(
-	"res://assets/scenes/bed_asset.tscn"
-)
-
-const SOFA_SCENE := preload(
-	"res://assets/scenes/sofa_asset.tscn"
-)
-
-const SHELF_SCENE := preload(
-	"res://assets/scenes/shelf_asset.tscn"
-)
-
-const REFRIGERATOR_SCENE := preload(
-	"res://assets/scenes/refrigerator_asset.tscn"
-)
 
 func save_map() -> void:
 	var object_list: Array = []
@@ -44,8 +18,19 @@ func save_map() -> void:
 			""
 		)
 
+		var asset_id: String = object.get_meta(
+			"asset_id",
+			""
+		)
+		
+		var object_id: String = object.get_meta(
+			"object_id",
+			""
+		)
+
 		object_list.append({
-			"asset_id": asset_type,
+			"object_id": object_id,
+			"asset_id": asset_id,
 			"type": asset_type,
 
 			"position": {
@@ -53,7 +38,8 @@ func save_map() -> void:
 				"y": object.position.y
 			},
 
-			"rotation": object.rotation_degrees,
+			"rotation": object.direction_index * 90,
+			"direction_index": object.direction_index,
 
 			"locked": object.is_locked,
 			"flipped": object.is_flipped
@@ -91,36 +77,42 @@ func save_map() -> void:
 	file.store_string(json_text)
 	file.close()
 
-	print("맵 저장 완료: ", ProjectSettings.globalize_path(SAVE_PATH))
+	print(
+		"맵 저장 완료: ",
+		ProjectSettings.globalize_path(SAVE_PATH)
+	)
+
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed and not event.echo:
 
-			if event.ctrl_pressed and event.keycode == KEY_S:
+			# JSON 저장
+			if (
+				event.ctrl_pressed
+				and not event.shift_pressed
+				and event.keycode == KEY_S
+			):
 				save_map()
 
+			# TSCN 저장
+			if (
+				event.ctrl_pressed
+				and event.shift_pressed
+				and event.keycode == KEY_S
+			):
+				save_map_as_tscn()
+
+			# JSON 불러오기
 			if event.ctrl_pressed and event.keycode == KEY_L:
 				load_map()
+			if (
+				event.ctrl_pressed
+				and event.shift_pressed
+				and event.keycode == KEY_L
+			):
+				load_map_from_tscn()
 
-func get_scene_by_type(asset_type: String) -> PackedScene:
-	match asset_type:
-		"table":
-			return TABLE_SCENE
-		"chair":
-			return CHAIR_SCENE
-		"cabinet":
-			return CABINET_SCENE
-		"bed":
-			return BED_SCENE
-		"sofa":
-			return SOFA_SCENE
-		"shelf":
-			return SHELF_SCENE
-		"refrigerator":
-			return REFRIGERATOR_SCENE
-
-	return null
 
 func load_map() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
@@ -136,15 +128,17 @@ func load_map() -> void:
 		print("맵 불러오기 실패")
 		return
 
-	var json_text := file.get_as_text()
+	var json_text: String = file.get_as_text()
 	file.close()
 
 	var json := JSON.new()
-
 	var error := json.parse(json_text)
 
 	if error != OK:
-		print("JSON 파싱 실패: ", json.get_error_message())
+		print(
+			"JSON 파싱 실패: ",
+			json.get_error_message()
+		)
 		return
 
 	var map_data: Dictionary = json.data
@@ -153,44 +147,80 @@ func load_map() -> void:
 		print("objects 데이터가 없습니다.")
 		return
 
+	# 현재 맵의 기존 가구 제거
 	for object in objects.get_children():
 		object.queue_free()
 
-	for object_data in map_data["objects"]:
+	for raw_object_data in map_data["objects"]:
+		var object_data: Dictionary = raw_object_data
+
+		var asset_id: String = object_data.get(
+			"asset_id",
+			""
+		)
+
 		var asset_type: String = object_data.get(
 			"type",
 			""
 		)
 
-		var selected_scene: PackedScene = get_scene_by_type(
-			asset_type
+		var selected_scene: PackedScene = get_scene_by_asset_id(
+			asset_id
+		)
+		
+		var object_id: String = object_data.get(
+			"object_id",
+			""
 		)
 
 		if selected_scene == null:
-			print("알 수 없는 asset type: ", asset_type)
+			print(
+				"등록되지 않은 asset_id: ",
+				asset_id
+			)
 			continue
 
-		var new_object := selected_scene.instantiate()
+		var new_object = selected_scene.instantiate()
 
-		var position_data: Dictionary = object_data["position"]
-
-		new_object.position = Vector2(
-			float(position_data["x"]),
-			float(position_data["y"])
+		var position_data: Dictionary = object_data.get(
+			"position",
+			{}
 		)
 
-		new_object.rotation_degrees = float(
-			object_data.get("rotation", 0)
+		new_object.position = Vector2(
+			float(position_data.get("x", 0)),
+			float(position_data.get("y", 0))
+		)
+
+		new_object.set_meta(
+			"object_id",
+			object_id
+		)
+
+		new_object.set_meta(
+			"asset_id",
+			asset_id
 		)
 
 		new_object.set_meta(
 			"asset_type",
 			asset_type
 		)
-
+		
 		objects.add_child(new_object)
 
+		# 방향 복원
+		var saved_direction: int = int(
+			object_data.get(
+				"direction_index",
+				0
+			)
+		)
 
+		new_object.direction_index = saved_direction
+		new_object.apply_direction_texture()
+
+		# 좌우 반전 복원
 		var flipped: bool = object_data.get(
 			"flipped",
 			false
@@ -203,7 +233,7 @@ func load_map() -> void:
 				new_object.visual.scale.x
 			)
 
-
+		# 잠금 복원
 		var locked: bool = object_data.get(
 			"locked",
 			false
@@ -211,10 +241,142 @@ func load_map() -> void:
 
 		if locked:
 			new_object.is_locked = true
+
 			new_object.visual.modulate = Color(
 				0.65,
 				0.65,
 				0.65,
 				1.0
 			)
+
 	print("맵 불러오기 완료")
+
+
+func get_scene_by_asset_id(
+	asset_id: String
+) -> PackedScene:
+
+	var asset_data: Dictionary = asset_registry.get_asset(
+		asset_id
+	)
+
+	if asset_data.is_empty():
+		return null
+
+	var scene_path: String = asset_data.get(
+		"scene_path",
+		""
+	)
+
+	if scene_path.is_empty():
+		return null
+
+	return load(scene_path) as PackedScene
+
+func save_map_as_tscn() -> void:
+	var generated_root := Node2D.new()
+	generated_root.name = "GeneratedMap"
+
+	for object in objects.get_children():
+		var copied_object := object.duplicate()
+
+		if copied_object == null:
+			continue
+
+		generated_root.add_child(copied_object)
+
+		copied_object.owner = generated_root
+		set_owner_recursive(
+			copied_object,
+			generated_root
+		)
+
+	var packed_scene := PackedScene.new()
+
+	var pack_error := packed_scene.pack(
+		generated_root
+	)
+
+	if pack_error != OK:
+		print(
+			"TS CN 생성 실패: ",
+			pack_error
+		)
+
+		generated_root.free()
+		return
+
+	var directory_path := "user://generated_maps"
+
+	DirAccess.make_dir_recursive_absolute(
+		ProjectSettings.globalize_path(
+			directory_path
+		)
+	)
+
+	var save_path := (
+		directory_path
+		+ "/test_map.tscn"
+	)
+
+	var save_error := ResourceSaver.save(
+		packed_scene,
+		save_path
+	)
+
+	if save_error != OK:
+		print(
+			"TS CN 저장 실패: ",
+			save_error
+		)
+
+		generated_root.free()
+		return
+
+	print(
+		"TS CN 저장 완료: ",
+		ProjectSettings.globalize_path(
+			save_path
+		)
+	)
+
+	generated_root.free()
+
+
+func set_owner_recursive(
+	node: Node,
+	scene_owner: Node
+) -> void:
+	for child in node.get_children():
+		child.owner = scene_owner
+
+		set_owner_recursive(
+			child,
+			scene_owner
+		)
+
+func load_map_from_tscn() -> void:
+	var save_path := "user://generated_maps/test_map.tscn"
+
+	if not ResourceLoader.exists(save_path):
+		print("TSCN 저장 파일이 없습니다.")
+		return
+
+	var packed_scene := load(save_path) as PackedScene
+
+	if packed_scene == null:
+		print("TSCN 불러오기 실패")
+		return
+
+	for object in objects.get_children():
+		object.queue_free()
+
+	var loaded_root := packed_scene.instantiate()
+
+	for child in loaded_root.get_children():
+		loaded_root.remove_child(child)
+		objects.add_child(child)
+
+	loaded_root.free()
+
+	print("TSCN 불러오기 완료")

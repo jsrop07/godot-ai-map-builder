@@ -1,5 +1,12 @@
 extends Node2D
 
+@export var texture_se: Texture2D
+@export var texture_sw: Texture2D
+@export var texture_nw: Texture2D
+@export var texture_ne: Texture2D
+
+var direction_index: int = 0
+
 var visual: CanvasItem
 
 @onready var click_area: Area2D = $ClickArea
@@ -116,10 +123,7 @@ func _input(event: InputEvent) -> void:
 				return
 
 			if is_selected and event.keycode == KEY_R:
-				rotation_degrees += 90.0
-
-				if rotation_degrees >= 360.0:
-					rotation_degrees = 0.0
+				rotate_direction()
 
 			if is_selected and event.keycode == KEY_DELETE:
 				queue_free()
@@ -264,6 +268,11 @@ func duplicate_object() -> void:
 
 	parent_node.add_child(duplicated_object)
 
+	duplicated_object.set_meta(
+		"object_id",
+		"obj_" + str(Time.get_ticks_usec())
+	)
+
 	# 복제본 상태 초기화
 	duplicated_object.is_dragging = false
 	duplicated_object.set_selected(true)
@@ -325,3 +334,27 @@ func adjust_sprite_offset(offset: Vector2) -> void:
 			"Sprite Offset: ",
 			visual.position
 		)
+
+func rotate_direction() -> void:
+	if not visual is Sprite2D:
+		return
+
+	direction_index = (direction_index + 1) % 4
+
+	apply_direction_texture()
+
+	print("Direction: ", direction_index)
+
+func apply_direction_texture() -> void:
+	if not visual is Sprite2D:
+		return
+
+	match direction_index:
+		0:
+			visual.texture = texture_se
+		1:
+			visual.texture = texture_sw
+		2:
+			visual.texture = texture_nw
+		3:
+			visual.texture = texture_ne

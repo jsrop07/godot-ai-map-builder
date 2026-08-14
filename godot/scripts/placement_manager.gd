@@ -1,33 +1,6 @@
 extends Node2D
 
-const TABLE_SCENE := preload(
-	"res://assets/scenes/table_asset.tscn"
-)
-
-const CHAIR_SCENE := preload(
-	"res://assets/scenes/chair_asset.tscn"
-)
-
-const CABINET_SCENE := preload(
-	"res://assets/scenes/cabinet_asset.tscn"
-)
-
-const BED_SCENE := preload(
-	"res://assets/scenes/bed_asset.tscn"
-)
-
-const SOFA_SCENE := preload(
-	"res://assets/scenes/sofa_asset.tscn"
-)
-
-const SHELF_SCENE := preload(
-	"res://assets/scenes/shelf_asset.tscn"
-)
-
-const REFRIGERATOR_SCENE := preload(
-	"res://assets/scenes/refrigerator_asset.tscn"
-)
-
+@onready var asset_registry: Node = $"../AssetRegistry"
 @onready var grid_manager: Node2D = $"../GridManager"
 @onready var objects: Node2D = $"../Objects"
 
@@ -64,9 +37,33 @@ func place_from_palette(
 		return
 
 	var new_object := selected_scene.instantiate()
+	
+	var object_id: String = generate_object_id()
+
+	new_object.set_meta(
+		"object_id",
+		object_id
+	)
 
 	new_object.position = snapped_position
+
+	var asset_list: Array = asset_registry.get_assets_by_type(
+		asset_type
+	)
+
+	if asset_list.is_empty():
+		print("등록된 Asset이 없습니다: ", asset_type)
+		return
+
+	var asset_data: Dictionary = asset_list[0]
+	var asset_id: String = asset_data.get(
+		"asset_id",
+		""
+	)
+	
+	new_object.set_meta("object_id", object_id)
 	new_object.set_meta("asset_type", asset_type)
+	new_object.set_meta("asset_id", asset_id)
 
 	objects.add_child(new_object)
 
@@ -76,45 +73,45 @@ func place_from_palette(
 		snapped_position
 	)
 
-
 func get_scene_by_type(asset_type: String) -> PackedScene:
-	match asset_type:
-		"table":
-			return TABLE_SCENE
-		"chair":
-			return CHAIR_SCENE
-		"cabinet":
-			return CABINET_SCENE
-		"bed":
-			return BED_SCENE
-		"sofa":
-			return SOFA_SCENE
-		"shelf":
-			return SHELF_SCENE
-		"refrigerator":
-			return REFRIGERATOR_SCENE
+	var asset_list: Array = asset_registry.get_assets_by_type(
+		asset_type
+	)
 
-	return null
+	if asset_list.is_empty():
+		return null
 
+	var asset_data: Dictionary = asset_list[0]
+
+	var scene_path: String = asset_data.get(
+		"scene_path",
+		""
+	)
+
+	if scene_path.is_empty():
+		return null
+
+	return load(scene_path) as PackedScene
 
 func get_size_by_type(asset_type: String) -> Vector2:
-	match asset_type:
-		"table":
-			return Vector2(96, 64)
-		"chair":
-			return Vector2(32, 32)
-		"cabinet":
-			return Vector2(64, 32)
-		"bed":
-			return Vector2(64, 96)
-		"sofa":
-			return Vector2(96, 64)
-		"shelf":
-			return Vector2(96, 32)
-		"refrigerator":
-			return Vector2(32, 64)
+	var asset_list: Array = asset_registry.get_assets_by_type(
+		asset_type
+	)
 
-	return Vector2.ZERO
+	if asset_list.is_empty():
+		return Vector2.ZERO
+
+	var asset_data: Dictionary = asset_list[0]
+
+	var size_data: Dictionary = asset_data.get(
+		"size",
+		{}
+	)
+
+	return Vector2(
+		float(size_data.get("width", 0)),
+		float(size_data.get("height", 0))
+	)
 
 
 func is_outside_map(new_rect: Rect2) -> bool:
@@ -152,3 +149,6 @@ func is_overlapping(new_rect: Rect2) -> bool:
 			return true
 
 	return false
+
+func generate_object_id() -> String:
+	return "obj_" + str(Time.get_ticks_usec())

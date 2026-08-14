@@ -2,14 +2,22 @@
 
 [ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_0pvia"]
 [ext_resource type="Texture2D" uid="uid://dbq5g05gq0j1d" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/kitchenFridge_SE.png" id="2_tx60g"]
+[ext_resource type="Texture2D" uid="uid://lyujp4pi242i" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/kitchenFridge_SW.png" id="3_rsef6"]
+[ext_resource type="Texture2D" uid="uid://cm2k4lsx6kjaf" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/kitchenFridge_NW.png" id="4_7ygff"]
+[ext_resource type="Texture2D" uid="uid://blt0ovwbpxm6k" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/kitchenFridge_NE.png" id="5_sfh0h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
 size = Vector2(32, 64)
 
 [node name="RefrigeratorAsset" type="Node2D" unique_id=1229401954]
 script = ExtResource("1_0pvia")
+texture_se = ExtResource("2_tx60g")
+texture_sw = ExtResource("3_rsef6")
+texture_nw = ExtResource("4_7ygff")
+texture_ne = ExtResource("5_sfh0h")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
+position = Vector2(-20, 8)
 texture = ExtResource("2_tx60g")
 
 [node name="ClickArea" type="Area2D" parent="." unique_id=399518407]

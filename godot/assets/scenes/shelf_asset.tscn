@@ -2,14 +2,22 @@
 
 [ext_resource type="Script" uid="uid://cjg6qerj6868k" path="res://scripts/selectable_object.gd" id="1_7lxmy"]
 [ext_resource type="Texture2D" uid="uid://dbfy26dtqirdf" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/bookcaseOpen_SE.png" id="2_7lxmy"]
+[ext_resource type="Texture2D" uid="uid://dcd1blk55umqt" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/bookcaseOpen_SW.png" id="3_d4csg"]
+[ext_resource type="Texture2D" uid="uid://bq3m2c3tnnkwn" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/bookcaseOpen_NW.png" id="4_2to7r"]
+[ext_resource type="Texture2D" uid="uid://frvljaegvrui" path="res://assets/real/kenney_furniture/furniture-kit/Isometric/bookcaseOpen_NE.png" id="5_tjf10"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xrivr"]
 size = Vector2(96, 32)
 
 [node name="ShelfAsset" type="Node2D" unique_id=1229401954]
 script = ExtResource("1_7lxmy")
+texture_se = ExtResource("2_7lxmy")
+texture_sw = ExtResource("3_d4csg")
+texture_nw = ExtResource("4_2to7r")
+texture_ne = ExtResource("5_tjf10")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=784678056]
+position = Vector2(41, 27)
 texture = ExtResource("2_7lxmy")
 
 [node name="ClickArea" type="Area2D" parent="." unique_id=399518407]

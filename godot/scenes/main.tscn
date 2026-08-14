@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://dhbtq6i4axpvm" path="res://scripts/palette_button.gd" id="3_jyhfs"]
 [ext_resource type="Script" uid="uid://b7xj2vt6hvsi8" path="res://scripts/map_save_manager.gd" id="3_tbgi4"]
 [ext_resource type="Script" uid="uid://2fjgf54kxh5x" path="res://scripts/map_drop_area.gd" id="4_tbgi4"]
+[ext_resource type="Script" uid="uid://kvuwruthijrx" path="res://scripts/asset_registry.gd" id="4_tefeu"]
 
 [node name="Main" type="Node2D" unique_id=1290160854]
 
@@ -18,6 +19,9 @@ script = ExtResource("2_0wfyh")
 
 [node name="MapSaveManager" type="Node" parent="." unique_id=1878552442]
 script = ExtResource("3_tbgi4")
+
+[node name="AssetRegistry" type="Node" parent="." unique_id=2093780859]
+script = ExtResource("4_tefeu")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=414421892]
 
