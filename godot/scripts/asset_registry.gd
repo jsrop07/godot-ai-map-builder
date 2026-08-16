@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 const REGISTRY_PATH := "res://data/asset_registry.json"
@@ -92,3 +93,12 @@ func get_assets_by_type(
 		asset_type,
 		[]
 	)
+
+func get_all_assets() -> Array:
+	var result: Array = []
+
+	for asset_id in assets_by_id.keys():
+		var asset_data: Dictionary = assets_by_id[asset_id]
+		result.append(asset_data)
+
+	return result

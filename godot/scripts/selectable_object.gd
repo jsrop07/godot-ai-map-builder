@@ -1,3 +1,4 @@
+@tool
 extends Node2D
 
 @export var texture_se: Texture2D
@@ -5,14 +6,10 @@ extends Node2D
 @export var texture_nw: Texture2D
 @export var texture_ne: Texture2D
 
-var direction_index: int = 0
-
 var visual: CanvasItem
 
 @onready var click_area: Area2D = $ClickArea
-@onready var grid_manager: Node2D = get_tree().current_scene.get_node(
-	"GridManager"
-)
+var grid_manager: Node2D
 
 var is_selected: bool = false
 var original_modulate: Color
@@ -20,16 +17,23 @@ var original_modulate: Color
 var is_dragging: bool = false
 var drag_offset: Vector2 = Vector2.ZERO
 
+var direction_index: int = 0
 var is_locked: bool = false
-
 var is_flipped: bool = false
 
 const OFFSET_MOVE_SPEED := 30.0
 
 const GRID_SIZE := 32
 
-
 func _ready() -> void:
+	var parent_node := get_parent()
+
+	if parent_node != null:
+		var scene_root := parent_node.get_parent()
+
+		if scene_root != null:
+			grid_manager = scene_root.get_node_or_null("GridManager")
+
 	visual = get_node_or_null("Polygon2D") as CanvasItem
 
 	if visual == null:
@@ -45,9 +49,13 @@ func _ready() -> void:
 
 	add_to_group("selectable_objects")
 
-	click_area.input_event.connect(
-		_on_click_area_input_event
-	)
+	if click_area != null:
+		if not click_area.input_event.is_connected(
+			_on_click_area_input_event
+		):
+			click_area.input_event.connect(
+				_on_click_area_input_event
+			)
 
 
 func _process(delta: float) -> void:
@@ -56,6 +64,9 @@ func _process(delta: float) -> void:
 		return
 
 	if is_dragging:
+		if grid_manager == null:
+			return
+
 		var mouse_position: Vector2 = get_global_mouse_position()
 		var object_size: Vector2 = get_occupied_size()
 

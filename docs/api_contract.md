@@ -253,3 +253,35 @@ Operation 검증
 ↓
 실제 Scene 수정
 ```
+
+## Error Response
+
+요청 처리 중 오류가 발생하면 다음 형식을 사용한다.
+
+```json
+{
+  "request_id": "req_001",
+  "status": "error",
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "요청 데이터가 올바르지 않습니다."
+  }
+}
+```
+
+### 기본 오류 코드
+
+- `INVALID_REQUEST`
+  - 요청 JSON 형식 또는 필수 필드 오류
+
+- `ASSET_NOT_FOUND`
+  - 등록되지 않은 asset_id 요청
+
+- `OBJECT_NOT_FOUND`
+  - 존재하지 않는 object_id 요청
+
+- `INVALID_OPERATION`
+  - 지원하지 않는 Operation 요청
+
+- `INTERNAL_ERROR`
+  - 서버 내부 처리 오류

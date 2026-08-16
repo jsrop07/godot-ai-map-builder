@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 @onready var objects: Node2D = $"../Objects"
@@ -22,11 +23,28 @@ func save_map() -> void:
 			"asset_id",
 			""
 		)
-		
+
 		var object_id: String = object.get_meta(
 			"object_id",
 			""
 		)
+
+		var direction_index: int = 0
+		var locked: bool = false
+		var flipped: bool = false
+
+		var raw_direction = object.get("direction_index")
+		var raw_locked = object.get("is_locked")
+		var raw_flipped = object.get("is_flipped")
+
+		if raw_direction != null:
+			direction_index = int(raw_direction)
+
+		if raw_locked != null:
+			locked = bool(raw_locked)
+
+		if raw_flipped != null:
+			flipped = bool(raw_flipped)
 
 		object_list.append({
 			"object_id": object_id,
@@ -38,11 +56,10 @@ func save_map() -> void:
 				"y": object.position.y
 			},
 
-			"rotation": object.direction_index * 90,
-			"direction_index": object.direction_index,
-
-			"locked": object.is_locked,
-			"flipped": object.is_flipped
+			"rotation": direction_index * 90,
+			"direction_index": direction_index,
+			"locked": locked,
+			"flipped": flipped
 		})
 
 	var map_data := {
@@ -206,7 +223,7 @@ func load_map() -> void:
 			"asset_type",
 			asset_type
 		)
-		
+
 		objects.add_child(new_object)
 
 		# 방향 복원
@@ -380,3 +397,86 @@ func load_map_from_tscn() -> void:
 	loaded_root.free()
 
 	print("TSCN 불러오기 완료")
+
+func get_current_map_data() -> Dictionary:
+	var object_list: Array = []
+
+	print("=== 현재 맵 오브젝트 확인 ===")
+	print("Objects 자식 수: ", objects.get_child_count())
+
+	for object in objects.get_children():
+		print(
+			"오브젝트: ",
+			object.name,
+			" / asset_type 있음: ",
+			object.has_meta("asset_type"),
+			" / asset_type: ",
+			object.get_meta("asset_type", ""),
+			" / asset_id: ",
+			object.get_meta("asset_id", ""),
+			" / object_id: ",
+			object.get_meta("object_id", "")
+		)
+
+		if not object.has_meta("asset_type"):
+			continue
+
+		var asset_type: String = object.get_meta(
+			"asset_type",
+			""
+		)
+
+		var asset_id: String = object.get_meta(
+			"asset_id",
+			""
+		)
+
+		var object_id: String = object.get_meta(
+			"object_id",
+			""
+		)
+		var direction_index: int = 0
+		var locked: bool = false
+		var flipped: bool = false
+
+		var raw_direction = object.get("direction_index")
+		var raw_locked = object.get("is_locked")
+		var raw_flipped = object.get("is_flipped")
+
+		if raw_direction != null:
+			direction_index = int(raw_direction)
+
+		if raw_locked != null:
+			locked = bool(raw_locked)
+
+		if raw_flipped != null:
+			flipped = bool(raw_flipped)
+		object_list.append({
+			"object_id": object_id,
+			"asset_id": asset_id,
+			"type": asset_type,
+
+			"position": {
+				"x": object.position.x,
+				"y": object.position.y
+			},
+
+			"rotation": direction_index * 90,
+			"direction_index": direction_index,
+			"locked": locked,
+			"flipped": flipped
+		})
+
+	return {
+		"schema_version": "1.0",
+		"map_id": "test_map",
+		"name": "Test Map",
+
+		"map_size": {
+			"width": 1152,
+			"height": 640
+		},
+
+		"grid_size": 32,
+		"objects": object_list
+	}

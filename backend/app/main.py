@@ -1,14 +1,33 @@
 from fastapi import FastAPI
 
-app = FastAPI(
-    title="Godot AI Map Builder API",
-    version="0.1.0",
+from app.schemas.map_edit import (
+    MapEditRequest,
+    MapEditResponse,
 )
+from app.services.llm_service import generate_operations
+
+
+app = FastAPI()
 
 
 @app.get("/health")
-def health_check() -> dict[str, str]:
+def health():
+    return {"status": "ok"}
+
+
+@app.post(
+    "/api/map/edit",
+    response_model=MapEditResponse,
+)
+def edit_map(data: MapEditRequest):
+    llm_result = generate_operations(
+        prompt=data.prompt,
+        map_data=data.map,
+        available_assets=data.available_assets,
+    )
+
     return {
-        "status": "ok",
-        "service": "godot-ai-map-builder-api",
+        "request_id": data.request_id,
+        "status": "success",
+        "operations": llm_result.operations,
     }
